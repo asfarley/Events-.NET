@@ -1,0 +1,4 @@
+/.vs/*
+/Events .NET/bin/*
+/Events .NET/obj/*
+*.csproj.user
