@@ -6,8 +6,10 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:Events_.NET"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <oxy:PlotView Model="{Binding EventsPlot}"  Drop="Grid_Drop" AllowDrop="True" Background="{x:Null}">
-
-    </oxy:PlotView>
+        Title="events.NET" Height="450" Width="800">
+    <Grid>
+        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Drop CSV file here</Label>
+        <oxy:PlotView Model="{Binding EventsPlot}"  Drop="Grid_Drop" AllowDrop="True" Background="{x:Null}">
+        </oxy:PlotView>
+    </Grid>
 </Window>

@@ -50,8 +50,33 @@ namespace Events_.NET
         private void ReadFileToEvents(string path)
         {
             var lines = System.IO.File.ReadLines(path);
-            Events = lines.Select(line => new Event(line)).ToList();
+            var timestampColumnInfo = DetectTimestampColumn(lines);
+            Events = lines.Select(line => new Event(line, timestampColumnInfo.Item1, timestampColumnInfo.Item2)).ToList();
             DrawChart();
+        }
+
+        private Tuple<int,Cliver.DateTimeRoutines.DateTimeFormat> DetectTimestampColumn(IEnumerable<string> lines)
+        {
+            var line = lines.First();
+            var split = line.Split(',');
+
+            for (int i=0;i<split.Length;i++)
+            {
+                DateTime dt;
+                var success_UK = Cliver.DateTimeRoutines.TryParseDateTime(split[i], Cliver.DateTimeRoutines.DateTimeFormat.UK_DATE, out dt);
+                var success_USA = Cliver.DateTimeRoutines.TryParseDateTime(split[i], Cliver.DateTimeRoutines.DateTimeFormat.USA_DATE, out dt);
+                
+                if (success_UK)
+                {
+                    return new Tuple<int, Cliver.DateTimeRoutines.DateTimeFormat>(i, Cliver.DateTimeRoutines.DateTimeFormat.UK_DATE);
+                }
+                else if (success_USA)
+                {
+                    return new Tuple<int, Cliver.DateTimeRoutines.DateTimeFormat>(i, Cliver.DateTimeRoutines.DateTimeFormat.USA_DATE);
+                }
+            }
+
+            throw new Exception("Timestamp not found in any column.");
         }
 
         public void DrawChart()

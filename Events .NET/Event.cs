@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 
+
 namespace Events_.NET
 {
     public class Event
@@ -12,12 +13,20 @@ namespace Events_.NET
         public DateTime Timestamp { get; set; }
         public List<string> Columns { get; set; }
 
-        public Event(string logLine)
+        public Event(string logLine, int timestampColumn, Cliver.DateTimeRoutines.DateTimeFormat format)
         {
             var splitText = logLine.Split(',');
-            var format = "dd/MM/yy HH:mm:ss UTC";
-            Timestamp = DateTime.ParseExact(splitText[0], format, CultureInfo.InvariantCulture);
-            Columns = splitText.Skip(1).ToList();
+            DateTime dt;
+            var success = Cliver.DateTimeRoutines.TryParseDateTime(splitText[timestampColumn], format, out dt);
+            if(success)
+            {
+                Timestamp = dt;
+                Columns = splitText.Skip(1).ToList();
+            }
+            else
+            {
+                throw new Exception("Unable to parse timestamp.");
+            }
         }
     }
 }
