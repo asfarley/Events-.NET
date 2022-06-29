@@ -4,3 +4,5 @@ Events.NET is a Windows WPF GUI application for visualizing event-stream histogr
 The CSV file must contain a recognized date-time in some column. 
 
 [Download](https://github.com/asfarley/Events-.NET/raw/master/Releases/Events.NET.zip)
+
+![Histogram screenshot](https://github.com/asfarley/Events-.NET/blob/master/screenshot.png?raw=true)
