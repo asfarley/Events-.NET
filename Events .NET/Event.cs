@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Globalization;
 
 
-namespace Events_.NET
+namespace Events.NET
 {
     public class Event
     {

@@ -17,7 +17,7 @@ using System.ComponentModel;
 using OxyPlot;
 using OxyPlot.Axes;
 
-namespace Events_.NET
+namespace Events.NET
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
