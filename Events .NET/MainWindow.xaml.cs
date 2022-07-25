@@ -86,11 +86,11 @@ namespace Events.NET
             EventsPlot = new PlotModel { PlotType = PlotType.XY };
             EventsPlot.Background = OxyColor.FromRgb(255, 255, 255);
 
-            EventsPlot.Axes.Add(new LinearAxis
+            EventsPlot.Axes.Add(new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
-                Minimum = 0,
-                Maximum = bins.Count,
+                Minimum = DateTimeAxis.ToDouble(bins.First().Item1),
+                Maximum = DateTimeAxis.ToDouble(bins.Last().Item1 + TimeSpan.FromMinutes(15)),
                 IsAxisVisible = true,
                 Title = "Bin"
             });
@@ -100,7 +100,9 @@ namespace Events.NET
             series.StrokeThickness = 3.0;
             for(int i=0; i < bins.Count; i++)
             {
-                series.Items.Add(new OxyPlot.Series.HistogramItem(i, i+1, bins[i].Item2, (int)bins[i].Item2, OxyColor.FromRgb(0,0,100)));
+                var width = DateTimeAxis.ToDouble(bins[i].Item1 + TimeSpan.FromMinutes(15)) - DateTimeAxis.ToDouble(bins[i].Item1);
+                var item = new OxyPlot.Series.HistogramItem(DateTimeAxis.ToDouble(bins[i].Item1), DateTimeAxis.ToDouble(bins[i].Item1 + TimeSpan.FromMinutes(15)), bins[i].Item2*width, (int)bins[i].Item2, OxyColor.FromRgb(0, 0, 100));
+                series.Items.Add(item);
             }
             EventsPlot.Series.Add(series);
 
