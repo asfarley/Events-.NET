@@ -7,9 +7,21 @@
         xmlns:local="clr-namespace:Events_.NET"
         mc:Ignorable="d"
         Title="events.NET" Height="450" Width="800">
-    <Grid>
-        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Drop CSV file here</Label>
-        <oxy:PlotView Model="{Binding EventsPlot}"  Drop="Grid_Drop" AllowDrop="True" Background="{x:Null}">
-        </oxy:PlotView>
-    </Grid>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <ComboBox ItemsSource="{Binding Approach.Values}" SelectedValue="{Binding SelectedApproach}" Width="100" Margin="10">
+            </ComboBox>
+            <ComboBox ItemsSource="{Binding Exit.Values}" SelectedValue="{Binding SelectedExit}" Width="100" Margin="10">
+            </ComboBox>
+            <ComboBox ItemsSource="{Binding ObjectType.Values}" SelectedValue="{Binding SelectedObjectType}" Width="100" Margin="10">
+            </ComboBox>
+            <ComboBox ItemsSource="{Binding MovementType.Values}" SelectedValue="{Binding SelectedMovementType}" Width="100" Margin="10">
+            </ComboBox>
+        </StackPanel>
+        <Grid MinHeight="400">
+            <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Drop CSV file here</Label>
+            <oxy:PlotView Model="{Binding EventsPlot}"  Drop="Grid_Drop" AllowDrop="True" Background="{x:Null}">
+            </oxy:PlotView>
+        </Grid>
+    </StackPanel>
 </Window>

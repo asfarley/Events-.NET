@@ -27,6 +27,83 @@ namespace Events.NET
         public List<Event> Events { get; set; }
         public PlotModel EventsPlot {get; private set; }
 
+        private Property approach = new Property();
+        public Property Approach
+        {
+            get { return approach; }
+            set { approach = value; OnPropertyChanged(); }
+        }
+        
+        private Property exit = new Property();
+
+        public Property Exit
+        {
+            get { return exit; }
+            set { exit = value; OnPropertyChanged(); }
+        }
+
+        private Property objectType = new Property();
+        public Property ObjectType
+        {
+            get { return objectType; }
+            set { objectType = value; OnPropertyChanged(); }
+        }
+
+        private Property movementType = new Property();
+        public Property MovementType
+        {
+            get { return movementType; }
+            set { movementType = value; OnPropertyChanged(); }
+        }
+
+        private string selectedApproach = "";
+
+        public string SelectedApproach
+        {
+            get { return selectedApproach; }
+            set { if (value != selectedApproach) { 
+                    selectedApproach = value; OnPropertyChanged();
+                    DrawChart();
+                } 
+            }
+        }
+        
+        private string selectedExit = "";
+        public string SelectedExit
+        {
+            get { return selectedExit; }
+            set { if (value != selectedExit) 
+                { 
+                    selectedExit = value; OnPropertyChanged();
+                    DrawChart();
+                }
+            }
+        }
+
+        private string selectedObjectType = "";
+        public string SelectedObjectType
+        {
+            get { return selectedObjectType; }
+            set { if (value != selectedObjectType) 
+                { 
+                    selectedObjectType = value; OnPropertyChanged();
+                    DrawChart();
+                }
+            }
+        }
+
+        private string selectedMovementType = "";
+        public string SelectedMovementType
+        {
+            get { return selectedMovementType; }
+            set { if (value != selectedMovementType) 
+                { 
+                    selectedMovementType = value; OnPropertyChanged();
+                    DrawChart();
+                }
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -43,6 +120,7 @@ namespace Events.NET
                 // Assuming you have one file that you care about, pass it off to whatever
                 // handling code you have defined.
                 ReadFileToEvents(files[0]);
+                ReadProperties();
             }
             
         }
@@ -53,6 +131,37 @@ namespace Events.NET
             var timestampColumnInfo = DetectTimestampColumn(lines);
             Events = lines.Select(line => new Event(line, timestampColumnInfo.Item1, timestampColumnInfo.Item2)).ToList();
             DrawChart();
+        }
+
+        private void ReadProperties()
+        { 
+            foreach(var e in Events)
+            {
+                var approachStr = e.Columns[0];
+                var exitStr = e.Columns[1];
+                var objectTypeStr = e.Columns[2];
+                var movementTypeStr = e.Columns[3];
+
+                if(!Approach.Values.Contains(approachStr))
+                {
+                    Approach.Values.Add(approachStr);
+                }
+
+                if (!Exit.Values.Contains(exitStr))
+                {
+                    Exit.Values.Add(exitStr);
+                }
+
+                if (!ObjectType.Values.Contains(objectTypeStr))
+                {
+                    ObjectType.Values.Add(objectTypeStr);
+                }
+
+                if (!MovementType.Values.Contains(movementTypeStr))
+                {
+                    MovementType.Values.Add(movementTypeStr);
+                }
+            }
         }
 
         private Tuple<int,Cliver.DateTimeRoutines.DateTimeFormat> DetectTimestampColumn(IEnumerable<string> lines)
@@ -81,7 +190,24 @@ namespace Events.NET
 
         public void DrawChart()
         {
-            var bins = BinnedCounts(Events);
+            var filteredEvents = Events;
+            if(SelectedApproach != "")
+            {
+                filteredEvents = filteredEvents.Where(e => e.Columns[0] == SelectedApproach).ToList();
+            }
+            if (SelectedExit != "")
+            {
+                filteredEvents = filteredEvents.Where(e => e.Columns[1] == SelectedExit).ToList();
+            }
+            if (SelectedObjectType != "")
+            {
+                filteredEvents = filteredEvents.Where(e => e.Columns[2] == SelectedObjectType).ToList();
+            }
+            if (SelectedMovementType != "")
+            {
+                filteredEvents = filteredEvents.Where(e => e.Columns[3] == SelectedMovementType).ToList();
+            }
+            var bins = BinnedCounts(filteredEvents);
 
             EventsPlot = new PlotModel { PlotType = PlotType.XY };
             EventsPlot.Background = OxyColor.FromRgb(255, 255, 255);
